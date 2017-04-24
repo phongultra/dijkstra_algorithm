@@ -1,0 +1,17 @@
+{
+  "name": "dijkstra-algorithm-demo",
+  "version": "1.0.0",
+  "description": "Demo Dijkstra Algorithm",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Nguyen Thanh Phong",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}

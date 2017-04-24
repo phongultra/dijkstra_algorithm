@@ -1,2 +1,2 @@
-# dijkstra_algorithm
-Dijkstra Algorithm Demo
+npm install
+node app.js
