@@ -1,0 +1,21 @@
+.node {
+    stroke: #7f8c8d;
+    stroke-width: 1.5px;
+    fill: #bdc3c7;
+    stroke-dasharray: 2px, 2px;
+}
+.link {
+    stroke: #000000;
+    stroke-opacity: 1;
+}
+.marker{
+    fill: #000000;
+}
+.linktext{
+    fill: #000000;
+    font-size: 120%;
+    background-color: #fbfbfb;
+}
+text {
+    pointer-events: none;
+}
