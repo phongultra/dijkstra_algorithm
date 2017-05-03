@@ -8,7 +8,7 @@ $(function () {
         refX = cRadius + (markerWidth * 2) - 1.5,
         refY = 0/*-Math.sqrt(cRadius)*/;
 
-    var color = d3.scale.category20();
+    //var color = d3.scale.category20();
 
     var force = d3.layout.force()
         .charge(-5000)
