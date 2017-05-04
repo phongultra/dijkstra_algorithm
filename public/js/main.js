@@ -188,6 +188,7 @@ $(function () {
                 .edges(links);
 
             node.on("click", dijkstra.runAllShortestPathFromStart);
+            console.log(121121212,node);
         });
     }
     Draw($("#open_file_csv").val())
