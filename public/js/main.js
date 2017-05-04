@@ -2,7 +2,8 @@ $(function () {
     $("#open_file_csv").on("change", function () {
         Draw($(this).val());
     })
-    var width = 1200, height = 600,
+
+    var width = 1200, height = 850,
         cRadius = 35,
         strokeWidth = 2, markerWidth = 5, markerHeight = 5,
         refX = cRadius + (markerWidth * 2) - 1.5,
@@ -43,6 +44,27 @@ $(function () {
                     }
                 }
             });
+            console.log(66666, nodes)
+            /*gan DL select box*/
+            $("select#select_start_node option").remove();
+            $.each(nodes, function (key, value) {
+                console.log(1111, key)
+                $("select#select_start_node").append('<option value=' + key + '>' + value.name + '</option>');
+            });
+
+
+            /*Xu ly*/
+            $("#find_shortest_path").click(function (e) {
+                e.preventDefault;
+                if (!$("select#select_start_node").val()) {
+                    alert("Vui long chon diem xuat phat");
+                    return;
+                }
+                var key = $("select#select_start_node").val();
+                dijkstra.runAllShortestPathFromStart(nodes[key]);
+            });
+
+
 
             force.nodes(nodes).links(links).start();
             /*Set Marker arrow in the Link*/
@@ -176,6 +198,7 @@ $(function () {
         var translate_speed = 1000;
         var cRadius = 35, strokeWidth = 2;
         dijkstra.runAllShortestPathFromStart = function (src) {
+            console.log(777777, src)
             // clear previous run
             clearInterval(go);
 
@@ -246,84 +269,6 @@ $(function () {
 
             tick()
             go = setInterval(tick, translate_speed);
-        };
-
-        dijkstra.runAllShortestPathFromStartToGoal = function (src, node) {
-            // clear previous run
-            clearInterval(go);
-
-            // reset styles
-            d3.selectAll('.node').style('fill', '#fff').attr('r', cRadius).style('stroke-width', strokeWidth);
-            d3.select('.' + src.name).style('fill', '#fdb03f').style('stroke-width', '0');
-            d3.selectAll('.nodetext').text(function (d) {
-                return d.name
-            });
-            //d3.selectAll('.linktext').style('opacity', '1'); Khong hide
-
-            source = src;
-            var unvisited = [];
-
-            nodes.forEach(function (d) {
-                d.preNode = null;
-                if (d != src) {
-                    d.distance = Infinity;
-                    unvisited.push(d);
-                    d.visited = false;
-                }
-            });
-
-            var current = src;
-            current.distance = 0;
-
-            function tick() {
-                current.visited = true;
-                current.links.forEach(function (link) {
-
-                    if (!link.target.visited) {
-                        var dist = current.distance + link.value;
-                        if (dist < link.target.distance) {
-                            nodes.forEach(function (d) {
-                                if (link.target.name === d.name) {
-                                    d.preNode = link.source; //gan preNode
-                                }
-                            });
-                        }
-                        link.target.distance = Math.min(dist, link.target.distance);
-                        d3.select('.' + link.target.name).transition().delay(translate_speed / 8).duration(500).attr('r', cRadius + link.value).style('fill', '#ecf0f1')
-                        d3.select('.nodetext.' + link.target.name).transition().delay(translate_speed / 8).duration(500).text(link.target.distance)
-                        d3.select('.linktext.' + link.id).style('opacity', 1).transition().duration(translate_speed).text(+link.value)
-                    }
-                });
-                if (unvisited.length == 0 || current.distance == Infinity) {
-                    clearInterval(go)
-                    return true
-                }
-                unvisited.sort(function (a, b) {
-                    return b.distance - a.distance
-                });
-
-                current = unvisited.pop()
-
-                d3.select('.' + current.name)
-                    .transition().delay(translate_speed * 2 / 5).duration(translate_speed / 5).attr('r', cRadius * 90 / 100)
-                    .transition().duration(translate_speed / 5).attr('r', cRadius)
-                    .style("fill", '#D0E1C3')
-                    .style('stroke-width', '0');
-
-                d3.select('.nodetext.' + current.name)
-                    .transition().delay(translate_speed * 4 / 5).text(function (d) {
-                        return d.name + " (" + d.distance + "-" + d.preNode.name + ")"
-                    })
-
-            }
-
-            tick();
-            go = setInterval(tick, translate_speed);
-            nodes.forEach(function (d) {
-                if (node.name === d.name) {
-                    dijkstra.colorShortestPath(d);
-                }
-            });
         };
 
         dijkstra.nodes = function (_) {
