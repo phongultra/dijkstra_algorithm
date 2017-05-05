@@ -17,25 +17,30 @@
 <body>
 	<div style="padding: 30px;">
 		<div class="row">
-			<label class="control-label">Demo tim duong di ngan nhat den tat ca cac dinh tu dinh xuat phat</label>
+			<div class="form-group text-uppercase">
+				<h4>Demo tìm tất cả đường đi ngắn nhất từ đỉnh xuất phát</h4>
+			</div>
+			<div class="form-group text-uppercase">
+				<h4>Bằng thuật toán Dijkstra</h4>
+			</div>
+		</div>
+		<div class="row">
+
 			<div class="col-xs-6 col-md-4 col-lg-2">
 				<form id="action">
 					<div class="form-group">
-						<label class="control-label">Chon do thi</label>
+						<label class="control-label">Chọn đồ thị</label>
 						<select id="open_file_csv" class="form-control input-sm">
-							<option value="co_huong">Demo : Do thi co huong</option>
-							<option value="vo_huong_1">Demo : Do thi vo huong 1</option>
-							<option value="vo_huong_2">Demo : Do thi vo huong 2</option>
-							<option value="vo_huong_3">Demo : Do thi vo huong 3</option>
+							<option value="co_huong_1">Có hướng 1</option>
+							<option value="co_huong_2">Có hướng 2</option>
+							<option value="vo_huong_1">Vô hướng 1</option>
+							<option value="vo_huong_2">Vô hướng 2</option>
+							<option value="vo_huong_3">Vô hướng 3</option>
 						</select>
 					</div>
-					<!--<div class="form-group">
-						<label class="control-label">Chon Diem xuat phat</label>
-						<select id="select_start_node" class="form-control input-sm"></select>
-					</div>
 					<div class="form-group">
-						<button type="button" class="btn btn-danger btn-sm" id="find_shortest_path">Tim</button>
-					</div>-->
+						<label id="direct" class="control-label"></label>
+					</div>
 				</form>
 			</div>
 			<div id="content" class="col-xs-6 col-md-8 col-lg-10">

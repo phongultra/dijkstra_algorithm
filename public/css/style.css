@@ -22,3 +22,7 @@ text {
 button, select, input{
     outline: none !important;
 }
+rect {
+  fill:black;
+  stroke:none;
+}

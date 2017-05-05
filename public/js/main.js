@@ -2,20 +2,9 @@ $(function () {
     $("#open_file_csv").on("change", function () {
         Draw($(this).val());
     })
-
-    var width = 1200, height = 850,
-        cRadius = 35,
-        strokeWidth = 2, markerWidth = 5, markerHeight = 5,
-        refX = cRadius + (markerWidth * 2) - 1.5,
-        refY = 0/*-Math.sqrt(cRadius)*/;
-
-    //var color = d3.scale.category20();
-
-    var force = d3.layout.force()
-        .charge(-5000)
-        .linkDistance(150)//chieu dai cua duong di tuong doi
-        .size([width, height]);
-
+    var width = 1200, height = 850, cRadius = 35, strokeWidth = 2, markerWidth = 5, markerHeight = 5, refX = cRadius + (markerWidth * 2) - 1.5, refY = 0;
+    var force = d3.layout.force().charge(-4000).linkDistance(130).size([width, height]);
+    var direct = "Click chọn 1 đỉnh để tìm đường đi ngắn nhất đến tất cả các đỉnh còn lại"
 
     function Draw(filename) {
         d3.select('#content svg').remove();
@@ -40,31 +29,10 @@ $(function () {
             data.forEach(function (d) {
                 for (k in d) {
                     if (d.hasOwnProperty(k) && k != "nodes" && d[k] < 750) {
-                        links.push({ "source": addNodeByName(d["nodes"]), "target": addNodeByName(k), "value": parseInt(d[k]) /*parseInt(Math.random()*d[k]*5+1)*/, 'id': addNodeByName(d["nodes"]).name + addNodeByName(k).name })
+                        links.push({ "source": addNodeByName(d["nodes"]), "target": addNodeByName(k), "value": parseInt(d[k]), 'id': addNodeByName(d["nodes"]).name + addNodeByName(k).name })
                     }
                 }
             });
-            console.log(66666, nodes)
-            /*gan DL select box*/
-            $("select#select_start_node option").remove();
-            $.each(nodes, function (key, value) {
-                console.log(1111, key)
-                $("select#select_start_node").append('<option value=' + key + '>' + value.name + '</option>');
-            });
-
-
-            /*Xu ly*/
-            $("#find_shortest_path").click(function (e) {
-                e.preventDefault;
-                if (!$("select#select_start_node").val()) {
-                    alert("Vui long chon diem xuat phat");
-                    return;
-                }
-                var key = $("select#select_start_node").val();
-                dijkstra.runAllShortestPathFromStart(nodes[key]);
-            });
-
-
 
             force.nodes(nodes).links(links).start();
             /*Set Marker arrow in the Link*/
@@ -98,8 +66,7 @@ $(function () {
             var linktext = glink.append('text')
                 .attr("class", function (d) {
                     return "linktext " + d.id
-                })
-                .attr('text-anchor', 'middle')
+                }).attr('text-anchor', 'middle')
                 .style('opacity', 1)
                 .text(function (d) {
                     return d.value
@@ -171,11 +138,22 @@ $(function () {
                     });
             });
 
+            function getStartNode(d) {
+                if (!d.preNode) {
+                    return d.name;
+                }
+                return getStartNode(d.preNode);
+            }
 
             node.on("mouseover", function (d) {
                 d3.select(this).attr('r', cRadius * 110 / 100);
                 //Show Shortest path from Start to This d
-                dijkstra.colorShortestPath(d);
+                if (d.preNode) {
+                    $("label#direct").html("Đường đi ngắn nhất từ " + getStartNode(d) + " đến " + d.name + " là " + d.distance + "<br/>");
+                    dijkstra.colorShortestPath(d);
+                } else {
+                    $("label#direct").html(direct);
+                }
             });
 
             node.on("mouseout", function (d) {
@@ -188,7 +166,7 @@ $(function () {
                 .edges(links);
 
             node.on("click", dijkstra.runAllShortestPathFromStart);
-            console.log(121121212,node);
+            $("label#direct").html(direct);
         });
     }
     Draw($("#open_file_csv").val())
@@ -199,8 +177,8 @@ $(function () {
         var translate_speed = 1000;
         var cRadius = 35, strokeWidth = 2;
         dijkstra.runAllShortestPathFromStart = function (src) {
-            console.log(777777, src)
             // clear previous run
+            $("label#direct").html(direct);
             clearInterval(go);
 
             // reset styles
@@ -209,7 +187,6 @@ $(function () {
             d3.selectAll('.nodetext').text(function (d) {
                 return d.name
             });
-            //d3.selectAll('.linktext').style('opacity', '1'); Khong hide
 
             source = src;
             var unvisited = [];
@@ -301,16 +278,14 @@ $(function () {
 
         dijkstra.colorShortestPath = function (d) {
             if (!d.preNode) {
+                $("label#direct").html($("label#direct").html() + d.name);
                 return;
             }
-
+            this.colorShortestPath(d.preNode);
             d3.select("." + d.name + d.preNode.name).style('stroke', "blue");
             d3.select("." + d.preNode.name + d.name).style('stroke', "blue");
-            this.colorShortestPath(d.preNode);
+            $("label#direct").html($("label#direct").html() + " ==> " + d.name);
         };
-
-
-        //dispatch.on("start.code", dijkstra.run);
 
         return d3.rebind(dijkstra, dispatch, "on", "end", "start", "tick");
     };
