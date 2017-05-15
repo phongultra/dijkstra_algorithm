@@ -3,7 +3,7 @@ $(function () {
         Draw($(this).val());
     })
     var width = 1200, height = 850, cRadius = 35, strokeWidth = 2, markerWidth = 5, markerHeight = 5, refX = cRadius + (markerWidth * 2) - 1.5, refY = 0;
-    var force = d3.layout.force().charge(-4000).linkDistance(130).size([width, height]);
+    var force = d3.layout.force().charge(-4000).linkDistance(80).size([width, height]);
     var direct = "Click chọn 1 đỉnh để tìm đường đi ngắn nhất đến tất cả các đỉnh còn lại"
 
     function Draw(filename) {
